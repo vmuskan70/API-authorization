@@ -2,7 +2,7 @@ const User=require("../models/User");
 const jwt=require("jsonwebtoken");
 const bcryptjs=require("bcryptjs");
 
-const register=()=>{
+const register=async(req,res)=>{
     try{
 
     }
