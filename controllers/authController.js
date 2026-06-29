@@ -9,7 +9,7 @@ const register=async(req,res)=>{
         if(oldUser){
             return res.status(401)>json({
                 success:false,
-                message:"user already exists"
+                message:"user already exist"
             });
         }
 
