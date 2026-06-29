@@ -4,6 +4,14 @@ const bcryptjs=require("bcryptjs");
 
 const register=async(req,res)=>{
     try{
+        const {name,email,password}=req.body;
+        const oldUser=await User.findOne({email});
+        if(oldUser){
+            return res.status(401)>json({
+                success:false,
+                message:"user already exists"
+            });
+        }
 
     }
     catch(err){
