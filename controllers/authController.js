@@ -1,6 +1,6 @@
 const User=require("../models/User");
 const jwt=require("jsonwebtoken");
-const bcryptjs=require("bcryptjs");
+const bcrypt=require("bcryptjs");
 
 const register=async(req,res)=>{
     try{
@@ -12,16 +12,12 @@ const register=async(req,res)=>{
                 message:"user already exist"
             });
         }
-        const hashPassword =await bcryptjs.hash(password,10);
+        const hashPassword =await bcrypt.hash(password,10);
         const user=await User.create({name,email,password:hashPassword});
-        res.status(201).json({
-            success:true,
-            message:"unable to register",
-            erroe:err.message
-        });
+        res.status(201)
     }
     catch(err){
-        res.status(500)>json({
+        res.status(500).json({
             success:false,
             message:"unable to register",
             error:err.message
@@ -39,16 +35,23 @@ if(!user){
         message:"invalid email"
     });
 }
-const isMatch=await bcryptjs.compare(password,user.password);
+const isMatch=await bcrypt.compare(password,user.password);
 if(!isMatch){
     return res.status(401).json({
         success:false,
         message:"invalid password"
     });
 }
+//payload ,key ,expiresin
 const token =jwt.sign({
     id:user._id,email:user.email
-}.process.env.SECRET_KEY,{expiresin:"1d"})
+},process.env.SECRET_KEY,{expiresIn:"1d"})
+res.json({
+    success:true,
+    message:"login success",
+    token,
+    data:user
+})
 
     }
     catch(err){
@@ -68,7 +71,10 @@ const profile=(req,res)=>{
     })
 
 };
-const logout=()=>{
-
+const logout=(req,res)=>{
+    res.json({
+        success:true,
+        message:"logout succesfully"
+    })
 };
 module.exports={register,login,profile,logout};
